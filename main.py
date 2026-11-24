@@ -16,6 +16,15 @@ def main() -> int:
     os.makedirs(out_dir, exist_ok=True)
     path = os.path.join(out_dir, "entry.txt")
 
+    # Pre-write gate check: the competition requires a single line of
+    # 1-180 characters. Fail before writing anything if LINE violates it.
+    if not 1 <= len(LINE) <= 180:
+        print(f"FAIL: bio line is {len(LINE)} chars, must be 1-180", file=sys.stderr)
+        return 1
+    if "\n" in LINE or "\r" in LINE:
+        print("FAIL: bio line must not contain a newline", file=sys.stderr)
+        return 1
+
     data = (LINE + "\n").encode("utf-8")
     with open(path, "wb") as f:
         f.write(data)
